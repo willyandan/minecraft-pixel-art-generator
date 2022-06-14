@@ -28,27 +28,31 @@ fn world_exists(world_name: &String) -> bool {
     path.exists()
 }
 
-fn create_function(
-    world: &String,
-    function: &String,
-    name: &String,
-) -> Result<(), WritePermission> {
+fn create_function(world: &String, function: &String, name: &String) -> Result<(), Box<dyn Error>> {
+    let args: Vec<String> = env::args().collect();
+    let current_folder = fs::canonicalize(Path::new(&args[0])).unwrap();
+    let current_folder = current_folder.parent().unwrap();
+    let current_folder = current_folder.to_str().unwrap();
     let path = format!(
-        "./saves/{}/datapacks/pixelart/data/pixelart/functions/{}.mcfunction",
-        world, name
+        "{}\\saves\\{}\\datapacks\\pixelart\\data\\pixelart\\functions\\{}.mcfunction",
+        current_folder, world, name
     );
     let path = Path::new(&path);
     let content = function.as_bytes();
     if let Err(_) = fs::write(path, content) {
-        return Err(WritePermission {});
+        return Err(Box::new(WritePermission {}));
     }
     Ok(())
 }
 
 fn create_datapack_files(world: &String) -> Result<(), WritePermission> {
+    let args: Vec<String> = env::args().collect();
+    let current_folder = fs::canonicalize(Path::new(&args[0])).unwrap();
+    let current_folder = current_folder.parent().unwrap();
+    let current_folder = current_folder.to_str().unwrap();
     let data_pack_path = format!(
-        "./saves/{}/datapacks/pixelart/data/pixelart/functions",
-        world
+        "{}\\saves\\{}\\datapacks\\pixelart\\data\\pixelart\\functions",
+        current_folder, world
     );
     if let Err(_) = fs::create_dir_all(data_pack_path) {
         return Err(WritePermission {});
@@ -56,7 +60,10 @@ fn create_datapack_files(world: &String) -> Result<(), WritePermission> {
     let pack_mc =
         String::from("{\"pack\":{\"pack_format\":10,\"description\":\"Pixel art generator\"}}");
     let pack_mc = pack_mc.as_bytes();
-    let pack_mc_path = format!("./saves/{}/datapacks/pixelart/pack.mcmeta", world);
+    let pack_mc_path = format!(
+        "{}\\saves\\{}\\datapacks\\pixelart\\pack.mcmeta",
+        current_folder, world
+    );
     let pack_mc_path = Path::new(&pack_mc_path);
     if let Err(_) = fs::write(pack_mc_path, pack_mc) {
         return Err(WritePermission {});
@@ -68,10 +75,14 @@ fn insert_function_into_datapack(
     function: &String,
     world: &String,
     name: &String,
-) -> Result<(), WritePermission> {
+) -> Result<(), Box<dyn Error>> {
+    let args: Vec<String> = env::args().collect();
+    let current_folder = fs::canonicalize(Path::new(&args[0])).unwrap();
+    let current_folder = current_folder.parent().unwrap();
+    let current_folder = current_folder.to_str().unwrap();
     let path = format!(
-        "./saves/{}/datapacks/pixelart/data/pixelart/functions",
-        world
+        "{}/saves/{}/datapacks/pixelart/data/pixelart/functions",
+        current_folder, world
     );
     let path = Path::new(&path);
     if !path.exists() {
