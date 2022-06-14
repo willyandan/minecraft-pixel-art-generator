@@ -21,7 +21,7 @@ Output:
 
 
 ## How to run it
-- Download the .exe https://github.com/willyandan/minecraft-pixel-art-generator/releases/download/v1.0.0/minecraft-pixel-art-generator.exe (Unfortunally it's only working for windows right now)
+- Download the .exe https://github.com/willyandan/minecraft-pixel-art-generator/releases/download/v1.0.1/minecraft-pixel-art-generator.exe (Unfortunally it's only working for windows right now)
 - Save it inside your .minecraft
 - open a cmd and run it:
   ```
